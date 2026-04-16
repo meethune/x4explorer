@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 def _create_test_db(path: Path) -> None:
-    """Create a minimal test database matching x4cat's index schema."""
+    """Create a test database matching x4cat's index schema."""
     conn = sqlite3.connect(path)
     conn.executescript("""
         CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -27,6 +27,17 @@ def _create_test_db(path: Path) -> None:
             volume INTEGER DEFAULT 0, tags TEXT DEFAULT '',
             price_min INTEGER DEFAULT 0, price_avg INTEGER DEFAULT 0,
             price_max INTEGER DEFAULT 0
+        );
+        CREATE TABLE ware_owners (
+            ware_id TEXT NOT NULL, faction TEXT NOT NULL,
+            PRIMARY KEY (ware_id, faction),
+            FOREIGN KEY (ware_id) REFERENCES wares(ware_id)
+        );
+        CREATE TABLE macro_properties (
+            macro_name TEXT NOT NULL, property_key TEXT NOT NULL,
+            property_val TEXT DEFAULT '',
+            PRIMARY KEY (macro_name, property_key),
+            FOREIGN KEY (macro_name) REFERENCES macros(name)
         );
         CREATE TABLE game_files (
             virtual_path TEXT PRIMARY KEY, size INTEGER,
