@@ -45,6 +45,48 @@ def _create_test_db(path: Path) -> None:
         );
 
         INSERT INTO meta VALUES ('game_dir', '/test/X4 Foundations');
+
+        -- Wares
+        INSERT INTO wares VALUES
+            ('energycells', '{20201,301}', 'energy', 'container',
+             6, 'container economy', 10, 16, 22);
+        INSERT INTO wares VALUES
+            ('ship_arg_s_fighter_01_a', '{20101,200}', 'ships_argon', 'ship',
+             1, 'ship', 100000, 130000, 160000);
+        INSERT INTO wares VALUES
+            ('advancedcomposites', '{20201,401}', 'hightech', 'container',
+             32, 'container economy', 432, 540, 648);
+
+        -- Ware owners
+        INSERT INTO ware_owners VALUES ('energycells', 'argon');
+        INSERT INTO ware_owners VALUES ('energycells', 'teladi');
+
+        -- Macros
+        INSERT INTO macros VALUES
+            ('ship_arg_s_fighter_01_a_macro',
+             'assets/units/size_s/macros/ship_arg_s_fighter_01_a_macro');
+        INSERT INTO macros VALUES
+            ('engine_test_mk1_macro',
+             'assets/props/engines/macros/engine_test_mk1_macro');
+
+        -- Macro properties
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_s_fighter_01_a_macro', 'class', 'ship_s');
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_s_fighter_01_a_macro', 'component_ref', 'ship_arg_s_fighter_01');
+
+        -- Components
+        INSERT INTO components VALUES
+            ('ship_arg_s_fighter_01',
+             'assets/units/size_s/ship_arg_s_fighter_01');
+        INSERT INTO components VALUES
+            ('engine_test_mk1',
+             'assets/props/engines/engine_test_mk1');
+
+        -- Game files (a few for count testing)
+        INSERT INTO game_files VALUES ('index/macros.xml', 1000, 1000000, 'abc');
+        INSERT INTO game_files VALUES ('index/components.xml', 500, 1000000, 'def');
+        INSERT INTO game_files VALUES ('libraries/wares.xml', 2000, 1000000, 'ghi');
     """)
     conn.commit()
     conn.close()
