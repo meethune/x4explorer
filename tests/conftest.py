@@ -98,13 +98,31 @@ def _create_test_db(path: Path) -> None:
         INSERT INTO ware_owners VALUES ('energycells', 'teladi');
         INSERT INTO ware_owners VALUES ('ship_arg_s_fighter_01_a', 'argon');
 
-        -- Macros
+        -- Macros (enough for pagination and class filter testing)
         INSERT INTO macros VALUES
             ('ship_arg_s_fighter_01_a_macro',
              'assets/units/size_s/macros/ship_arg_s_fighter_01_a_macro');
         INSERT INTO macros VALUES
+            ('ship_arg_m_bomber_01_a_macro',
+             'assets/units/size_m/macros/ship_arg_m_bomber_01_a_macro');
+        INSERT INTO macros VALUES
             ('engine_test_mk1_macro',
              'assets/props/engines/macros/engine_test_mk1_macro');
+        INSERT INTO macros VALUES
+            ('engine_test_mk2_macro',
+             'assets/props/engines/macros/engine_test_mk2_macro');
+        INSERT INTO macros VALUES
+            ('shield_arg_s_standard_01_macro',
+             'assets/props/shields/macros/shield_arg_s_standard_01_macro');
+        INSERT INTO macros VALUES
+            ('weapon_gen_s_laser_01_mk1_macro',
+             'assets/props/weapons/macros/weapon_gen_s_laser_01_mk1_macro');
+        INSERT INTO macros VALUES
+            ('cluster_01_macro',
+             'maps/xu_ep2_universe/clusters/cluster_01_macro');
+        INSERT INTO macros VALUES
+            ('sector_001_macro',
+             'maps/xu_ep2_universe/sectors/sector_001_macro');
 
         -- Macro properties
         INSERT INTO macro_properties VALUES
@@ -112,14 +130,57 @@ def _create_test_db(path: Path) -> None:
         INSERT INTO macro_properties VALUES
             ('ship_arg_s_fighter_01_a_macro', 'component_ref',
              'ship_arg_s_fighter_01');
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_s_fighter_01_a_macro', 'hull.max', '3100');
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_s_fighter_01_a_macro', 'purpose.primary', 'fight');
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_m_bomber_01_a_macro', 'class', 'ship_m');
+        INSERT INTO macro_properties VALUES
+            ('ship_arg_m_bomber_01_a_macro', 'component_ref',
+             'ship_arg_m_bomber_01');
+        INSERT INTO macro_properties VALUES
+            ('engine_test_mk1_macro', 'class', 'engine');
+        INSERT INTO macro_properties VALUES
+            ('engine_test_mk1_macro', 'component_ref', 'engine_test_mk1');
+        INSERT INTO macro_properties VALUES
+            ('engine_test_mk2_macro', 'class', 'engine');
+        INSERT INTO macro_properties VALUES
+            ('engine_test_mk2_macro', 'component_ref', 'engine_test_mk2');
+        INSERT INTO macro_properties VALUES
+            ('shield_arg_s_standard_01_macro', 'class', 'shieldgenerator');
+        INSERT INTO macro_properties VALUES
+            ('shield_arg_s_standard_01_macro', 'component_ref',
+             'shield_arg_s_standard_01');
+        INSERT INTO macro_properties VALUES
+            ('weapon_gen_s_laser_01_mk1_macro', 'class', 'weapon');
+        INSERT INTO macro_properties VALUES
+            ('weapon_gen_s_laser_01_mk1_macro', 'component_ref',
+             'weapon_gen_s_laser_01_mk1');
+        INSERT INTO macro_properties VALUES
+            ('cluster_01_macro', 'class', 'cluster');
+        INSERT INTO macro_properties VALUES
+            ('sector_001_macro', 'class', 'sector');
 
         -- Components
         INSERT INTO components VALUES
             ('ship_arg_s_fighter_01',
              'assets/units/size_s/ship_arg_s_fighter_01');
         INSERT INTO components VALUES
+            ('ship_arg_m_bomber_01',
+             'assets/units/size_m/ship_arg_m_bomber_01');
+        INSERT INTO components VALUES
             ('engine_test_mk1',
              'assets/props/engines/engine_test_mk1');
+        INSERT INTO components VALUES
+            ('engine_test_mk2',
+             'assets/props/engines/engine_test_mk2');
+        INSERT INTO components VALUES
+            ('shield_arg_s_standard_01',
+             'assets/props/shields/shield_arg_s_standard_01');
+        INSERT INTO components VALUES
+            ('weapon_gen_s_laser_01_mk1',
+             'assets/props/weapons/weapon_gen_s_laser_01_mk1');
 
         -- Game files
         INSERT INTO game_files VALUES ('index/macros.xml', 1000, 1000000, 'abc');

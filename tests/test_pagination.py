@@ -51,15 +51,3 @@ class TestParsePageParams:
         for size in (10, 25, 50, 100):
             _, per_page = parse_page_params(None, str(size))
             assert per_page == size
-
-    def test_cookie_fallback(self) -> None:
-        _, per_page = parse_page_params(None, None, per_page_cookie="25")
-        assert per_page == 25
-
-    def test_query_param_overrides_cookie(self) -> None:
-        _, per_page = parse_page_params(None, "50", per_page_cookie="25")
-        assert per_page == 50
-
-    def test_invalid_cookie_uses_default(self) -> None:
-        _, per_page = parse_page_params(None, None, per_page_cookie="999")
-        assert per_page == 10

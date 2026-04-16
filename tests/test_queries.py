@@ -18,8 +18,8 @@ class TestGetTableCounts:
         counts = get_table_counts(conn)
         conn.close()
         assert counts["wares"] == 15
-        assert counts["macros"] == 2
-        assert counts["components"] == 2
+        assert counts["macros"] == 8
+        assert counts["components"] == 6
         assert counts["game_files"] == 3
 
     def test_empty_tables_return_zero(self, tmp_path: Path) -> None:

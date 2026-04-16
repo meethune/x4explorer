@@ -72,6 +72,12 @@
 }
 .search-row input[type="search"] { flex: 1; }
 .search-row select { width: auto; min-width: 5rem; }
+.search-row .btn-reset {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
 
 /* Filter row — selects share available space equally */
 .filter-selects {

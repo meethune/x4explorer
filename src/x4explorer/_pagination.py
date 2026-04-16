@@ -36,22 +36,18 @@ class Page:
 def parse_page_params(
     page_raw: str | None,
     per_page_raw: str | None,
-    per_page_cookie: str | None = None,
 ) -> tuple[int, int]:
     """Parse and clamp page and per_page from query params.
 
-    Falls back to *per_page_cookie* if the query param is absent,
-    then to the default. Returns (page, per_page).
+    Returns (page, per_page) with safe defaults.
     """
     try:
         page = max(1, int(page_raw or "1"))
     except (ValueError, TypeError):
         page = 1
 
-    # Query param takes precedence, then cookie, then default
-    raw = per_page_raw or per_page_cookie
     try:
-        per_page = int(raw) if raw else _DEFAULT_PER_PAGE
+        per_page = int(per_page_raw) if per_page_raw else _DEFAULT_PER_PAGE
     except (ValueError, TypeError):
         per_page = _DEFAULT_PER_PAGE
 
