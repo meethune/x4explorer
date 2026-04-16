@@ -5,48 +5,6 @@
 {% block content %}
 <h1>Search</h1>
 
-<div class="search-controls">
-    <div class="search-row">
-        <input type="search"
-               name="q"
-               value="{{ query }}"
-               placeholder="ware, macro, or component ID..."
-               hx-get="/search"
-               hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
-               hx-target="#search-results"
-               hx-swap="innerHTML focus-scroll:false"
-               hx-push-url="true"
-               hx-sync="this:replace"
-               hx-include="[name='type'],[name='per_page']"
-               autocomplete="off">
-        <select name="per_page"
-                hx-get="/search"
-                hx-target="#search-results"
-                hx-swap="innerHTML focus-scroll:false"
-                hx-include="[name='q'],[name='type']"
-                hx-vals='{"page": "1"}'
-                hx-push-url="true">
-            {% for size in [10, 25, 50, 100] %}
-            <option value="{{ size }}" {{ 'selected' if page.per_page == size }}>{{ size }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <fieldset role="group">
-        <label><input type="radio" name="type" value="all" {% if type_filter == 'all' %}checked{% endif %}
-               hx-get="/search" hx-target="#search-results" hx-swap="innerHTML focus-scroll:false"
-               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> All</label>
-        <label><input type="radio" name="type" value="ware" {% if type_filter == 'ware' %}checked{% endif %}
-               hx-get="/search" hx-target="#search-results" hx-swap="innerHTML focus-scroll:false"
-               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Wares</label>
-        <label><input type="radio" name="type" value="macro" {% if type_filter == 'macro' %}checked{% endif %}
-               hx-get="/search" hx-target="#search-results" hx-swap="innerHTML focus-scroll:false"
-               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Macros</label>
-        <label><input type="radio" name="type" value="component" {% if type_filter == 'component' %}checked{% endif %}
-               hx-get="/search" hx-target="#search-results" hx-swap="innerHTML focus-scroll:false"
-               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Components</label>
-    </fieldset>
-</div>
-
 <div id="search-results">
     {% include "_search_results.html" %}
 </div>

@@ -1,0 +1,108 @@
+{% macro sort_link(col, label) %}
+{% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
+{% set arrow = '▲' if dir == 'asc' else '▼' %}
+{% set base = "/wares?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&group=" ~ group ~ "&transport=" ~ transport ~ "&tag=" ~ tag ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+<a href="{{ base }}"
+   hx-get="{{ base }}"
+   hx-target="#wares-view"
+   hx-push-url="true">{{ label }}{% if sort == col %} {{ arrow }}{% endif %}</a>
+{% endmacro %}
+
+<div class="search-controls">
+    <div class="search-row">
+        <input type="search" name="q" value="{{ query }}" placeholder="Filter by ID..."
+               hx-get="/wares"
+               hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
+               hx-target="#wares-view"
+               hx-include="[name='group'],[name='transport'],[name='tag'],[name='sort'],[name='dir'],[name='per_page']"
+               hx-vals='{"page": "1"}'
+               hx-push-url="true"
+               hx-sync="closest div:replace"
+               autocomplete="off">
+        <select name="per_page"
+                hx-get="/wares"
+                hx-target="#wares-view"
+                hx-include="[name='group'],[name='transport'],[name='tag'],[name='q'],[name='sort'],[name='dir']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            {% for size in [10, 25, 50, 100] %}
+            <option value="{{ size }}" {{ 'selected' if page.per_page == size }}>{{ size }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-selects">
+        <select name="group"
+                hx-get="/wares"
+                hx-target="#wares-view"
+                hx-include="[name='transport'],[name='tag'],[name='q'],[name='sort'],[name='dir'],[name='per_page']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            <option value="">All groups</option>
+            {% for g in filters.groups %}
+            <option value="{{ g }}" {{ 'selected' if g == group }}>{{ g }}</option>
+            {% endfor %}
+        </select>
+        <select name="transport"
+                hx-get="/wares"
+                hx-target="#wares-view"
+                hx-include="[name='group'],[name='tag'],[name='q'],[name='sort'],[name='dir'],[name='per_page']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            <option value="">All transport</option>
+            {% for t in filters.transports %}
+            <option value="{{ t }}" {{ 'selected' if t == transport }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+        <select name="tag"
+                hx-get="/wares"
+                hx-target="#wares-view"
+                hx-include="[name='group'],[name='transport'],[name='q'],[name='sort'],[name='dir'],[name='per_page']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            <option value="">All tags</option>
+            {% for tg in filters.tags %}
+            <option value="{{ tg }}" {{ 'selected' if tg == tag }}>{{ tg }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<input type="hidden" name="sort" value="{{ sort }}">
+<input type="hidden" name="dir" value="{{ dir }}">
+
+<p>{{ page.total_rows }} ware{{ 's' if page.total_rows != 1 }}</p>
+
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>{{ sort_link('ware_id', 'ID') }}</th>
+            <th>{{ sort_link('name_ref', 'Name Ref') }}</th>
+            <th>{{ sort_link('ware_group', 'Group') }}</th>
+            <th>{{ sort_link('transport', 'Transport') }}</th>
+            <th class="num">{{ sort_link('volume', 'Vol') }}</th>
+            <th class="num">{{ sort_link('price_min', 'Min') }}</th>
+            <th class="num">{{ sort_link('price_avg', 'Avg') }}</th>
+            <th class="num">{{ sort_link('price_max', 'Max') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for w in wares %}
+        <tr>
+            <td><code><a href="/wares/{{ w.ware_id }}">{{ w.ware_id }}</a></code></td>
+            <td>{{ w.name_ref }}</td>
+            <td>{{ w.ware_group }}</td>
+            <td>{{ w.transport }}</td>
+            <td class="num">{{ w.volume }}</td>
+            <td class="num">{{ w.price_min }}</td>
+            <td class="num">{{ w.price_avg }}</td>
+            <td class="num">{{ w.price_max }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% set base_url = "/wares?sort=" ~ sort ~ "&dir=" ~ dir ~ "&group=" ~ group ~ "&transport=" ~ transport ~ "&tag=" ~ tag ~ "&q=" ~ (query | urlencode) %}
+{% set htmx_target = "#wares-view" %}
+{% include "_pagination.html" %}

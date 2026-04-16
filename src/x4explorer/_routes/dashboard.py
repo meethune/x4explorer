@@ -40,7 +40,8 @@ async def search_page(request: Request) -> Response:
     templates: Jinja2Templates = request.app.state.templates
     conn = get_db()
     query = request.query_params.get("q", "").strip()
-    type_raw = request.query_params.get("type", "")
+    params = request.query_params
+    type_raw = params["type"] if "type" in params else request.cookies.get("search_type", "")
     type_filter = type_raw if type_raw in ("ware", "macro", "component") else None
     page_num, per_page = parse_page_params(
         request.query_params.get("page"),
@@ -71,4 +72,5 @@ async def search_page(request: Request) -> Response:
         response = templates.TemplateResponse(request, "search.html", context)
     response.headers["Vary"] = "HX-Request"
     response.set_cookie("per_page", str(per_page), max_age=31536000, httponly=True)
+    response.set_cookie("search_type", type_filter or "all", max_age=31536000, httponly=True)
     return response

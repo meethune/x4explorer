@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Wares — x4explorer{% endblock %}
+
+{% block content %}
+<h1>Wares</h1>
+
+<div id="wares-view" hx-sync="this:replace">
+    {% include "wares/_table.html" %}
+</div>
+{% endblock %}

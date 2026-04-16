@@ -12,6 +12,7 @@ from starlette.templating import Jinja2Templates
 
 from x4explorer._db import close_db, init_db
 from x4explorer._routes.dashboard import dashboard, search_page
+from x4explorer._routes.wares import ware_detail, ware_list
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -36,6 +37,8 @@ def create_app(db_path: Path) -> Starlette:
     routes: list[Route | Mount] = [
         Route("/", dashboard, name="dashboard"),
         Route("/search", search_page, name="search"),
+        Route("/wares", ware_list, name="wares"),
+        Route("/wares/{ware_id:path}", ware_detail, name="ware_detail"),
         Mount("/static", app=StaticFiles(directory=str(_STATIC_DIR)), name="static"),
     ]
 

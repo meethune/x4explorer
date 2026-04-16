@@ -62,8 +62,26 @@
     gap: 0.5rem;
     align-items: center;
 }
+.search-controls .search-row,
+.search-controls .filter-selects {
+    margin-bottom: 0.35rem;
+}
+.search-row input,
+.search-row select {
+    margin-bottom: 0;
+}
 .search-row input[type="search"] { flex: 1; }
 .search-row select { width: auto; min-width: 5rem; }
+
+/* Filter row — selects share available space equally */
+.filter-selects {
+    display: flex;
+    gap: 0.5rem;
+}
+.filter-selects select {
+    flex: 1;
+    margin-bottom: 0;
+}
 
 .search-controls fieldset[role="group"] {
     display: flex;
@@ -76,6 +94,38 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    margin: 0;
+}
+
+/* Data tables */
+.data-table th, .data-table td {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+.data-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+}
+.data-table tbody tr:hover {
+    background: rgba(78, 150, 166, 0.08);
+}
+.data-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Detail page definition lists */
+dl.detail {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 1rem;
+    max-width: 40rem;
+}
+dl.detail dt {
+    font-weight: 600;
+    color: var(--pico-muted-color);
+}
+dl.detail dd {
     margin: 0;
 }
 
