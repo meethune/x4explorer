@@ -115,6 +115,10 @@
 .data-table tbody tr:hover {
     background: rgba(78, 150, 166, 0.08);
 }
+.data-table .wrap {
+    white-space: normal;
+    max-width: 40rem;
+}
 .data-table .num {
     text-align: right;
     font-variant-numeric: tabular-nums;
@@ -133,6 +137,16 @@ dl.detail dt {
 }
 dl.detail dd {
     margin: 0;
+}
+
+/* Inherited properties — visually muted */
+.data-table tr.inherited td {
+    color: var(--pico-muted-color);
+}
+
+/* Inheritance chain breadcrumb */
+.inheritance-chain code {
+    margin: 0 0.15rem;
 }
 
 /* htmx indicator — only visible after 200ms */

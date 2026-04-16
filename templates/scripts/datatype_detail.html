@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ datatype.name }} — x4explorer{% endblock %}
+
+{% block content %}
+<h1><code>{{ datatype.name }}</code></h1>
+
+<dl class="detail">
+    {% if datatype.base_type %}
+    <dt>Base Type</dt>
+    <dd><code><a href="/scripts/datatypes/{{ datatype.base_type }}">{{ datatype.base_type }}</a></code></dd>
+    {% endif %}
+    {% if datatype.suffix %}
+    <dt>Suffix</dt>
+    <dd>{{ datatype.suffix }}</dd>
+    {% endif %}
+    {% if datatype.is_pseudo %}
+    <dt>Pseudo</dt>
+    <dd>yes</dd>
+    {% endif %}
+</dl>
+
+{% if chain | length > 1 %}
+<h2>Inheritance</h2>
+<p class="inheritance-chain">
+    {% for ancestor in chain %}
+        {% if not loop.first %} &rarr; {% endif %}
+        {% if ancestor.name == datatype.name %}
+            <strong><code>{{ ancestor.name }}</code></strong>
+        {% else %}
+            <code><a href="/scripts/datatypes/{{ ancestor.name }}">{{ ancestor.name }}</a></code>
+        {% endif %}
+    {% endfor %}
+</p>
+{% endif %}
+
+{% if own_props %}
+<h2>Properties</h2>
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Result Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in own_props %}
+        <tr>
+            <td><code>{{ p.prop_name }}</code></td>
+            <td class="wrap">{{ p.result_desc }}</td>
+            <td>{% if p.result_type and p.result_type in all_datatype_names %}<code><a href="/scripts/datatypes/{{ p.result_type }}">{{ p.result_type }}</a></code>{% elif p.result_type %}{{ p.result_type }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if inherited_props %}
+<h2>Inherited Properties</h2>
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Result Type</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in inherited_props %}
+        <tr class="inherited">
+            <td><code>{{ p.prop_name }}</code></td>
+            <td class="wrap">{{ p.result_desc }}</td>
+            <td>{% if p.result_type and p.result_type in all_datatype_names %}<code><a href="/scripts/datatypes/{{ p.result_type }}">{{ p.result_type }}</a></code>{% elif p.result_type %}{{ p.result_type }}{% endif %}</td>
+            <td><code><a href="/scripts/datatypes/{{ p.source }}">{{ p.source }}</a></code></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<p><a href="#" onclick="history.back(); return false;" hx-boost="false">&larr; Back</a></p>
+{% endblock %}

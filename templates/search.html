@@ -10,7 +10,7 @@
         <input type="search"
                name="q"
                value="{{ query }}"
-               placeholder="ware, macro, or component ID..."
+               placeholder="ware, macro, component, datatype, or keyword..."
                hx-get="/search"
                hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
                hx-target="#search-data"
@@ -46,6 +46,12 @@
         <label><input type="radio" name="type" value="component" {% if type_filter == 'component' %}checked{% endif %}
                hx-get="/search" hx-target="#search-data" hx-swap="innerHTML focus-scroll:false"
                hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Components</label>
+        <label><input type="radio" name="type" value="datatype" {% if type_filter == 'datatype' %}checked{% endif %}
+               hx-get="/search" hx-target="#search-data" hx-swap="innerHTML focus-scroll:false"
+               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Datatypes</label>
+        <label><input type="radio" name="type" value="keyword" {% if type_filter == 'keyword' %}checked{% endif %}
+               hx-get="/search" hx-target="#search-data" hx-swap="innerHTML focus-scroll:false"
+               hx-include="[name='q'],[name='per_page']" hx-push-url="true"> Keywords</label>
     </fieldset>
 </div>
 

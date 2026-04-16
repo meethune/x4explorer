@@ -1,0 +1,41 @@
+{% macro sort_link(col, label) %}
+{% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
+{% set arrow = '▲' if dir == 'asc' else '▼' %}
+{% set base = "/scripts/keywords?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&script=" ~ script ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+<a href="{{ base }}"
+   hx-get="{{ base }}"
+   hx-target="#keywords-data"
+   hx-push-url="true">{{ label }}{% if sort == col %} {{ arrow }}{% endif %}</a>
+{% endmacro %}
+
+<input type="hidden" name="sort" value="{{ sort }}">
+<input type="hidden" name="dir" value="{{ dir }}">
+
+<p>{{ page.total_rows }} keyword{{ 's' if page.total_rows != 1 }}</p>
+
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>{{ sort_link('name', 'Name') }}</th>
+            <th>{{ sort_link('description', 'Description') }}</th>
+            <th>{{ sort_link('type', 'Type') }}</th>
+            <th>{{ sort_link('script', 'Script') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for kw in keywords %}
+        <tr>
+            <td><code><a href="/scripts/keywords/{{ kw.name }}">{{ kw.name }}</a></code></td>
+            <td>{{ kw.description }}</td>
+            <td>{{ kw.type or '' }}</td>
+            <td>{{ kw.script }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% set base_url = "/scripts/keywords?sort=" ~ sort ~ "&dir=" ~ dir ~ "&script=" ~ script ~ "&q=" ~ (query | urlencode) %}
+{% set htmx_target = "#keywords-data" %}
+{% include "_pagination.html" %}

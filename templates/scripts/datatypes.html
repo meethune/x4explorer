@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Datatypes — x4explorer{% endblock %}
+
+{% block content %}
+<h1>Script Datatypes</h1>
+
+<div class="search-controls">
+    <div class="search-row">
+        <input type="search" name="q" value="{{ query }}" placeholder="Filter by name..."
+               hx-get="/scripts/datatypes"
+               hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
+               hx-target="#datatypes-data"
+               hx-include="[name='base_type'],[name='sort'],[name='dir'],[name='per_page']"
+               hx-vals='{"page": "1"}'
+               hx-push-url="true"
+               hx-sync="this:replace"
+               autocomplete="off">
+        <select name="per_page"
+                hx-get="/scripts/datatypes"
+                hx-target="#datatypes-data"
+                hx-include="[name='base_type'],[name='q'],[name='sort'],[name='dir']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            {% for size in [10, 25, 50, 100] %}
+            <option value="{{ size }}" {{ 'selected' if page.per_page == size }}>{{ size }}</option>
+            {% endfor %}
+        </select>
+        <a href="/scripts/datatypes" class="btn-reset" role="button"
+           onclick="sessionStorage.removeItem('x4e_nav_/scripts/datatypes')">Reset</a>
+    </div>
+    <div class="filter-selects">
+        <select name="base_type"
+                hx-get="/scripts/datatypes"
+                hx-target="#datatypes-data"
+                hx-include="[name='q'],[name='sort'],[name='dir'],[name='per_page']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            <option value="">All base types</option>
+            {% for bt in filters.base_types %}
+            <option value="{{ bt }}" {{ 'selected' if bt == base_type }}>{{ bt }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div id="datatypes-data" hx-sync="this:replace">
+    {% include "scripts/_datatypes_table.html" %}
+</div>
+{% endblock %}

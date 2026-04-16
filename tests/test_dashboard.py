@@ -30,8 +30,8 @@ class TestDashboard:
         assert 'href="/macros"' in text
         assert 'href="/components"' in text
         assert 'href="/conflicts"' in text
-        assert "Datatypes" in text
-        assert "Keywords" in text
+        assert 'href="/scripts/datatypes"' in text
+        assert 'href="/scripts/keywords"' in text
 
     def test_contains_search_input(self, client: TestClient) -> None:
         response = client.get("/")

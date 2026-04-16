@@ -19,15 +19,8 @@
                 <li><a href="/wares" {% if current == 'wares' %}aria-current="page"{% endif %}>Wares</a></li>
                 <li><a href="/macros" {% if current == 'macros' %}aria-current="page"{% endif %}>Macros</a></li>
                 <li><a href="/components" {% if current == 'components' %}aria-current="page"{% endif %}>Components</a></li>
-                <li>
-                    <details class="dropdown">
-                        <summary {% if current == 'scripts' %}aria-current="page"{% endif %}>Scripts</summary>
-                        <ul dir="rtl">
-                            <li><a href="/scripts/datatypes">Datatypes</a></li>
-                            <li><a href="/scripts/keywords">Keywords</a></li>
-                        </ul>
-                    </details>
-                </li>
+                <li><a href="/scripts/datatypes" {% if current == 'datatypes' %}aria-current="page"{% endif %}>Datatypes</a></li>
+                <li><a href="/scripts/keywords" {% if current == 'keywords' %}aria-current="page"{% endif %}>Keywords</a></li>
                 <li><a href="/conflicts" {% if current == 'conflicts' %}aria-current="page"{% endif %}>Conflicts</a></li>
             </ul>
         </nav>
@@ -52,7 +45,8 @@
     // in sessionStorage so nav links restore filter state even
     // after navigating to detail pages and back.
     (function() {
-        var PATHS = ["/wares", "/macros", "/components", "/search"];
+        var PATHS = ["/wares", "/macros", "/components", "/search",
+                     "/scripts/datatypes", "/scripts/keywords"];
         var KEY = "x4e_nav_";
 
         function saveState(url) {

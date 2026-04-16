@@ -182,6 +182,60 @@ def _create_test_db(path: Path) -> None:
             ('weapon_gen_s_laser_01_mk1',
              'assets/props/weapons/weapon_gen_s_laser_01_mk1');
 
+        -- Script datatypes (inheritance chain: ship -> container -> component)
+        CREATE TABLE script_datatypes (
+            name TEXT PRIMARY KEY, base_type TEXT,
+            suffix TEXT, is_pseudo INTEGER DEFAULT 0
+        );
+        CREATE TABLE script_keywords (
+            name TEXT PRIMARY KEY, description TEXT DEFAULT '',
+            type TEXT, script TEXT DEFAULT 'any'
+        );
+        CREATE TABLE script_properties (
+            owner_name TEXT NOT NULL, owner_kind TEXT NOT NULL,
+            prop_name TEXT NOT NULL, result_desc TEXT DEFAULT '',
+            result_type TEXT,
+            PRIMARY KEY (owner_name, owner_kind, prop_name)
+        );
+
+        INSERT INTO script_datatypes VALUES ('component', NULL, NULL, 0);
+        INSERT INTO script_datatypes VALUES ('destructible', 'component', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('object', 'destructible', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('controllable', 'object', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('container', 'controllable', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('ship', 'container', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('station', 'container', NULL, 0);
+        INSERT INTO script_datatypes VALUES ('integer', NULL, NULL, 1);
+        INSERT INTO script_datatypes VALUES ('boolean', NULL, NULL, 1);
+
+        -- Script properties for datatypes
+        INSERT INTO script_properties VALUES
+            ('component', 'datatype', 'exists', 'true iff exists', 'boolean');
+        INSERT INTO script_properties VALUES
+            ('component', 'datatype', 'name', 'the name', 'string');
+        INSERT INTO script_properties VALUES
+            ('ship', 'datatype', 'speed', 'current speed', 'integer');
+        INSERT INTO script_properties VALUES
+            ('ship', 'datatype', 'pilot', 'the pilot', 'controllable');
+        INSERT INTO script_properties VALUES
+            ('container', 'datatype', 'cargo', 'cargo list', 'string');
+        INSERT INTO script_properties VALUES
+            ('controllable', 'datatype', 'owner', 'the owner', 'entity');
+
+        -- Script keywords
+        INSERT INTO script_keywords VALUES
+            ('player', 'Player data', 'entity', 'any');
+        INSERT INTO script_keywords VALUES
+            ('this', 'Current entity', 'component', 'md');
+        INSERT INTO script_keywords VALUES
+            ('event', 'Event info', NULL, 'ai');
+
+        -- Script properties for keywords
+        INSERT INTO script_properties VALUES
+            ('player', 'keyword', 'money', 'player credits', 'integer');
+        INSERT INTO script_properties VALUES
+            ('this', 'keyword', 'ship', 'the ship', 'ship');
+
         -- Game files
         INSERT INTO game_files VALUES ('index/macros.xml', 1000, 1000000, 'abc');
         INSERT INTO game_files VALUES ('index/components.xml', 500, 1000000, 'def');

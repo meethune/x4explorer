@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ keyword.name }} — x4explorer{% endblock %}
+
+{% block content %}
+<h1><code>{{ keyword.name }}</code></h1>
+
+<dl class="detail">
+    <dt>Description</dt>
+    <dd>{{ keyword.description }}</dd>
+    {% if keyword.type %}
+    <dt>Type</dt>
+    <dd>{% if keyword.type in all_datatype_names %}<code><a href="/scripts/datatypes/{{ keyword.type }}">{{ keyword.type }}</a></code>{% else %}{{ keyword.type }}{% endif %}</dd>
+    {% endif %}
+    <dt>Script</dt>
+    <dd>{{ keyword.script }}</dd>
+</dl>
+
+{% if properties %}
+<h2>Properties</h2>
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Result Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in properties %}
+        <tr>
+            <td><code>{{ p.prop_name }}</code></td>
+            <td class="wrap">{{ p.result_desc }}</td>
+            <td>{% if p.result_type and p.result_type in all_datatype_names %}<code><a href="/scripts/datatypes/{{ p.result_type }}">{{ p.result_type }}</a></code>{% elif p.result_type %}{{ p.result_type }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<p><a href="#" onclick="history.back(); return false;" hx-boost="false">&larr; Back</a></p>
+{% endblock %}

@@ -14,6 +14,12 @@ from x4explorer._db import close_db, init_db
 from x4explorer._routes.components import component_detail, component_list
 from x4explorer._routes.dashboard import dashboard, search_page
 from x4explorer._routes.macros import macro_detail, macro_list
+from x4explorer._routes.scripts import (
+    datatype_detail,
+    datatype_list,
+    keyword_detail,
+    keyword_list,
+)
 from x4explorer._routes.wares import ware_detail, ware_list
 
 if TYPE_CHECKING:
@@ -45,6 +51,10 @@ def create_app(db_path: Path) -> Starlette:
         Route("/macros/{name:path}", macro_detail, name="macro_detail"),
         Route("/components", component_list, name="components"),
         Route("/components/{name:path}", component_detail, name="component_detail"),
+        Route("/scripts/datatypes", datatype_list, name="datatypes"),
+        Route("/scripts/datatypes/{name:path}", datatype_detail, name="datatype_detail"),
+        Route("/scripts/keywords", keyword_list, name="keywords"),
+        Route("/scripts/keywords/{name:path}", keyword_detail, name="keyword_detail"),
         Mount("/static", app=StaticFiles(directory=str(_STATIC_DIR)), name="static"),
     ]
 
