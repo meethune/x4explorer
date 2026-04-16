@@ -17,7 +17,7 @@ class TestGetTableCounts:
         conn.row_factory = sqlite3.Row
         counts = get_table_counts(conn)
         conn.close()
-        assert counts["wares"] == 3
+        assert counts["wares"] == 15
         assert counts["macros"] == 2
         assert counts["components"] == 2
         assert counts["game_files"] == 3

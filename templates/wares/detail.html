@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ware.ware_id }} — x4explorer{% endblock %}
+
+{% block content %}
+<h1><code>{{ ware.ware_id }}</code></h1>
+
+<dl class="detail">
+    <dt>Name Ref</dt>
+    <dd>{{ ware.name_ref }}</dd>
+    <dt>Group</dt>
+    <dd>{{ ware.ware_group }}</dd>
+    <dt>Transport</dt>
+    <dd>{{ ware.transport }}</dd>
+    <dt>Volume</dt>
+    <dd>{{ ware.volume }}</dd>
+    <dt>Tags</dt>
+    <dd>{{ ware.tags }}</dd>
+    <dt>Price</dt>
+    <dd>{{ ware.price_min }} / {{ ware.price_avg }} / {{ ware.price_max }} (min / avg / max)</dd>
+</dl>
+
+{% if owners %}
+<h2>Owners</h2>
+<ul>
+    {% for owner in owners %}
+    <li>{{ owner.faction }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if macro_name %}
+<h2>Related Macro</h2>
+<p><code><a href="/macros/{{ macro_name }}">{{ macro_name }}</a></code></p>
+{% endif %}
+
+<p><a href="#" onclick="history.back(); return false;" hx-boost="false">&larr; Back</a></p>
+{% endblock %}

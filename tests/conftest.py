@@ -46,7 +46,7 @@ def _create_test_db(path: Path) -> None:
 
         INSERT INTO meta VALUES ('game_dir', '/test/X4 Foundations');
 
-        -- Wares
+        -- Wares (enough for pagination: 15 total)
         INSERT INTO wares VALUES
             ('energycells', '{20201,301}', 'energy', 'container',
              6, 'container economy', 10, 16, 22);
@@ -56,10 +56,47 @@ def _create_test_db(path: Path) -> None:
         INSERT INTO wares VALUES
             ('advancedcomposites', '{20201,401}', 'hightech', 'container',
              32, 'container economy', 432, 540, 648);
+        INSERT INTO wares VALUES
+            ('antimattercells', '{20201,201}', 'refined', 'container',
+             18, 'container economy', 121, 202, 282);
+        INSERT INTO wares VALUES
+            ('claytronics', '{20201,501}', 'hightech', 'container',
+             60, 'container economy', 1276, 1594, 1912);
+        INSERT INTO wares VALUES
+            ('graphene', '{20201,601}', 'refined', 'container',
+             20, 'container economy', 66, 110, 154);
+        INSERT INTO wares VALUES
+            ('hullparts', '{20201,701}', 'shiptech', 'container',
+             24, 'container economy', 138, 230, 322);
+        INSERT INTO wares VALUES
+            ('microchips', '{20201,801}', 'shiptech', 'container',
+             22, 'container economy', 28, 46, 64);
+        INSERT INTO wares VALUES
+            ('ore', '{20201,901}', 'minerals', 'solid',
+             10, 'container economy', 30, 50, 70);
+        INSERT INTO wares VALUES
+            ('silicon', '{20201,1001}', 'minerals', 'solid',
+             10, 'container economy', 67, 134, 201);
+        INSERT INTO wares VALUES
+            ('water', '{20201,1101}', 'ice', 'liquid',
+             6, 'container economy', 18, 32, 46);
+        INSERT INTO wares VALUES
+            ('wheat', '{20201,1201}', 'agricultural', 'container',
+             6, 'container economy', 6, 12, 18);
+        INSERT INTO wares VALUES
+            ('engine_arg_s_allround_01_mk1', '{20107,100}', 'engines',
+             'equipment', 1, 'engine equipment', 1000, 1500, 2000);
+        INSERT INTO wares VALUES
+            ('shield_arg_s_standard_01_mk1', '{20108,100}', 'shields',
+             'equipment', 1, 'shield equipment', 800, 1200, 1600);
+        INSERT INTO wares VALUES
+            ('missile_guided_mk1', '{20110,100}', 'missiles',
+             'equipment', 1, 'missile', 50, 75, 100);
 
         -- Ware owners
         INSERT INTO ware_owners VALUES ('energycells', 'argon');
         INSERT INTO ware_owners VALUES ('energycells', 'teladi');
+        INSERT INTO ware_owners VALUES ('ship_arg_s_fighter_01_a', 'argon');
 
         -- Macros
         INSERT INTO macros VALUES
@@ -73,7 +110,8 @@ def _create_test_db(path: Path) -> None:
         INSERT INTO macro_properties VALUES
             ('ship_arg_s_fighter_01_a_macro', 'class', 'ship_s');
         INSERT INTO macro_properties VALUES
-            ('ship_arg_s_fighter_01_a_macro', 'component_ref', 'ship_arg_s_fighter_01');
+            ('ship_arg_s_fighter_01_a_macro', 'component_ref',
+             'ship_arg_s_fighter_01');
 
         -- Components
         INSERT INTO components VALUES
@@ -83,7 +121,7 @@ def _create_test_db(path: Path) -> None:
             ('engine_test_mk1',
              'assets/props/engines/engine_test_mk1');
 
-        -- Game files (a few for count testing)
+        -- Game files
         INSERT INTO game_files VALUES ('index/macros.xml', 1000, 1000000, 'abc');
         INSERT INTO game_files VALUES ('index/components.xml', 500, 1000000, 'def');
         INSERT INTO game_files VALUES ('libraries/wares.xml', 2000, 1000000, 'ghi');

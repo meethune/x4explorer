@@ -5,9 +5,9 @@
             {% if page.has_prev %}
             <a href="{{ base_url }}&page={{ page.number - 1 }}&per_page={{ page.per_page }}"
                hx-get="{{ base_url }}&page={{ page.number - 1 }}&per_page={{ page.per_page }}"
-               hx-target="#search-results"
-               hx-swap="innerHTML focus-scroll:false"
-               hx-push-url="true">Prev</a>
+               hx-target="{{ htmx_target | default('#search-results') }}"
+               hx-push-url="true"
+               hx-disabled-elt="this">Prev</a>
             {% else %}
             <span aria-disabled="true">Prev</span>
             {% endif %}
@@ -17,9 +17,9 @@
             {% if page.has_next %}
             <a href="{{ base_url }}&page={{ page.number + 1 }}&per_page={{ page.per_page }}"
                hx-get="{{ base_url }}&page={{ page.number + 1 }}&per_page={{ page.per_page }}"
-               hx-target="#search-results"
-               hx-swap="innerHTML focus-scroll:false"
-               hx-push-url="true">Next</a>
+               hx-target="{{ htmx_target | default('#search-results') }}"
+               hx-push-url="true"
+               hx-disabled-elt="this">Next</a>
             {% else %}
             <span aria-disabled="true">Next</span>
             {% endif %}
