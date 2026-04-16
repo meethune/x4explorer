@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}x4explorer{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/pico.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/custom.css') }}">
+    <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
+</head>
+<body hx-boost="true">
+    <header class="container">
+        <nav>
+            <ul>
+                <li><strong>x4explorer</strong></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container">
+        <small>
+            x4explorer &mdash; powered by
+            <a href="https://github.com/meethune/x4cat">x4cat</a>
+        </small>
+    </footer>
+</body>
+</html>
