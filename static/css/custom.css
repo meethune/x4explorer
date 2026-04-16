@@ -1,1 +1,45 @@
-/* x4explorer custom styles — placeholder */
+/* x4explorer color palette */
+:root[data-theme="dark"] {
+    --pico-background-color: #181a1b;
+    --pico-color: #e0e3e7;
+    --pico-muted-color: #9aafba;
+    --pico-muted-border-color: #1a3d4f;
+
+    --pico-primary: #4E96A6;
+    --pico-primary-background: #376B8C;
+    --pico-primary-border: var(--pico-primary-background);
+    --pico-primary-underline: rgba(78, 150, 166, 0.5);
+    --pico-primary-hover: #6ab4c4;
+    --pico-primary-hover-background: #4E96A6;
+    --pico-primary-hover-border: var(--pico-primary-hover-background);
+    --pico-primary-hover-underline: var(--pico-primary-hover);
+    --pico-primary-focus: rgba(78, 150, 166, 0.375);
+    --pico-primary-inverse: #181a1b;
+
+    --pico-secondary: #A67437;
+    --pico-secondary-background: #A67437;
+    --pico-secondary-border: var(--pico-secondary-background);
+    --pico-secondary-underline: rgba(166, 116, 55, 0.5);
+    --pico-secondary-hover: #c08a45;
+    --pico-secondary-hover-background: #c08a45;
+    --pico-secondary-hover-border: var(--pico-secondary-hover-background);
+    --pico-secondary-hover-underline: var(--pico-secondary-hover);
+    --pico-secondary-focus: rgba(166, 116, 55, 0.25);
+    --pico-secondary-inverse: #181a1b;
+
+    --pico-h1-color: #F2DB94;
+    --pico-h2-color: #F2DB94;
+    --pico-h3-color: #e0cfa0;
+    --pico-h4-color: #c2b88a;
+    --pico-h5-color: #a4a07a;
+    --pico-h6-color: #9aafba;
+
+    --pico-card-background-color: #0f3a4d;
+    --pico-card-border-color: #1a4d63;
+    --pico-card-sectioning-background-color: #123847;
+
+    --pico-table-border-color: #1a4d63;
+    --pico-table-row-stripped-background-color: rgba(78, 150, 166, 0.04);
+
+    --pico-text-selection-color: rgba(242, 219, 148, 0.2);
+}
