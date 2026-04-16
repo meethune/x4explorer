@@ -16,7 +16,7 @@ The [x4cat CLI](https://github.com/meethune/x4cat) handles one-hop lookups well 
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | [FastAPI](https://fastapi.tiangolo.com/) |
+| Backend | [Starlette](https://www.starlette.io/) |
 | Database | SQLite ([x4cat](https://github.com/meethune/x4cat) index) |
 | Frontend | [htmx](https://htmx.org/) + [Jinja2](https://jinja.palletsprojects.com/) |
 | Styling | [Pico CSS](https://picocss.com/) |
@@ -47,17 +47,33 @@ uv tool install git+https://github.com/meethune/x4cat.git
 x4cat index "/path/to/X4 Foundations"
 ```
 
+## Setup
+
+Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
+
+```bash
+git clone https://github.com/meethune/x4explorer.git
+cd x4explorer
+uv sync
+```
+
 ## Usage
 
 ```bash
-# Install
-uv sync
-
-# Serve
+# Serve using a specific index
 x4explorer serve --db ~/.cache/x4cat/<hash>.db
 
 # Or auto-detect the most recent index
 x4explorer serve
+```
+
+## Development
+
+```bash
+uv run pytest
+uv run ruff check src/ tests/
+uv run ruff format --check src/ tests/
+uv run mypy src/
 ```
 
 ## Relationship to x4cat
