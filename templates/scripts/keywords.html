@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Keywords — x4explorer{% endblock %}
+
+{% block content %}
+<h1>Script Keywords</h1>
+
+<div class="search-controls">
+    <div class="search-row">
+        <input type="search" name="q" value="{{ query }}" placeholder="Filter by name..."
+               hx-get="/scripts/keywords"
+               hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
+               hx-target="#keywords-data"
+               hx-include="[name='script'],[name='sort'],[name='dir'],[name='per_page']"
+               hx-vals='{"page": "1"}'
+               hx-push-url="true"
+               hx-sync="this:replace"
+               autocomplete="off">
+        <select name="per_page"
+                hx-get="/scripts/keywords"
+                hx-target="#keywords-data"
+                hx-include="[name='script'],[name='q'],[name='sort'],[name='dir']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            {% for size in [10, 25, 50, 100] %}
+            <option value="{{ size }}" {{ 'selected' if page.per_page == size }}>{{ size }}</option>
+            {% endfor %}
+        </select>
+        <a href="/scripts/keywords" class="btn-reset" role="button"
+           onclick="sessionStorage.removeItem('x4e_nav_/scripts/keywords')">Reset</a>
+    </div>
+    <div class="filter-selects">
+        <select name="script"
+                hx-get="/scripts/keywords"
+                hx-target="#keywords-data"
+                hx-include="[name='q'],[name='sort'],[name='dir'],[name='per_page']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            <option value="">All scripts</option>
+            {% for s in filters.scripts %}
+            <option value="{{ s }}" {{ 'selected' if s == script }}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div id="keywords-data" hx-sync="this:replace">
+    {% include "scripts/_keywords_table.html" %}
+</div>
+{% endblock %}

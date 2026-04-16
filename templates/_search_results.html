@@ -1,3 +1,10 @@
+{% set type_urls = {
+    'ware': '/wares/',
+    'macro': '/macros/',
+    'component': '/components/',
+    'datatype': '/scripts/datatypes/',
+    'keyword': '/scripts/keywords/'
+} %}
 {% if query and results %}
 <p>{{ page.total_rows }} result{{ 's' if page.total_rows != 1 }}</p>
 <table>
@@ -12,7 +19,7 @@
         {% for result in results %}
         <tr>
             <td>{{ result.type }}</td>
-            <td><code><a href="/{{ result.type }}s/{{ result.id }}">{{ result.id }}</a></code></td>
+            <td><code><a href="{{ type_urls[result.type] }}{{ result.id }}">{{ result.id }}</a></code></td>
             <td>{{ result.detail }}</td>
         </tr>
         {% endfor %}

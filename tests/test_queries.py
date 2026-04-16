@@ -30,6 +30,8 @@ class TestGetTableCounts:
             CREATE TABLE components (name TEXT PRIMARY KEY, value TEXT);
             CREATE TABLE wares (ware_id TEXT PRIMARY KEY);
             CREATE TABLE game_files (virtual_path TEXT PRIMARY KEY);
+            CREATE TABLE script_datatypes (name TEXT PRIMARY KEY);
+            CREATE TABLE script_keywords (name TEXT PRIMARY KEY);
         """)
         counts = get_table_counts(conn)
         conn.close()

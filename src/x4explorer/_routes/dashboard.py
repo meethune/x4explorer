@@ -41,7 +41,9 @@ async def search_page(request: Request) -> Response:
     conn = get_db()
     query = request.query_params.get("q", "").strip()
     type_raw = request.query_params.get("type", "")
-    type_filter = type_raw if type_raw in ("ware", "macro", "component") else None
+    type_filter = (
+        type_raw if type_raw in ("ware", "macro", "component", "datatype", "keyword") else None
+    )
     page_num, per_page = parse_page_params(
         request.query_params.get("page"),
         request.query_params.get("per_page"),
