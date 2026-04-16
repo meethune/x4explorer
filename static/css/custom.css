@@ -1,5 +1,10 @@
-/* x4explorer color palette */
+/* x4explorer color palette and density overrides */
 :root[data-theme="dark"] {
+    --pico-font-size: 15px;
+    --pico-line-height: 1.4;
+    --pico-spacing: 0.75rem;
+    --pico-block-spacing-vertical: 0.75rem;
+    --pico-block-spacing-horizontal: 0.75rem;
     --pico-background-color: #181a1b;
     --pico-color: #e0e3e7;
     --pico-muted-color: #9aafba;
@@ -42,4 +47,47 @@
     --pico-table-row-stripped-background-color: rgba(78, 150, 166, 0.04);
 
     --pico-text-selection-color: rgba(242, 219, 148, 0.2);
+}
+
+/* Compact counts table */
+.counts-table { max-width: 20rem; }
+.counts-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Search controls */
+.search-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.search-row input[type="search"] { flex: 1; }
+.search-row select { width: auto; min-width: 5rem; }
+
+.search-controls fieldset[role="group"] {
+    display: flex;
+    gap: 1rem;
+    border: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+.search-controls fieldset[role="group"] label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+/* htmx indicator — only visible after 200ms */
+.htmx-indicator {
+    display: none;
+    opacity: 0;
+}
+.htmx-request .htmx-indicator {
+    display: inline-block;
+    animation: show-indicator 0s 200ms forwards;
+}
+@keyframes show-indicator {
+    to { opacity: 1; }
 }

@@ -1,0 +1,25 @@
+{% if query and results %}
+<p>{{ page.total_rows }} result{{ 's' if page.total_rows != 1 }}</p>
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>ID</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.type }}</td>
+            <td><code><a href="/{{ result.type }}s/{{ result.id }}">{{ result.id }}</a></code></td>
+            <td>{{ result.detail }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% set base_url = "/search?q=" ~ (query | urlencode) ~ "&type=" ~ type_filter %}
+{% include "_pagination.html" %}
+{% elif query %}
+<p>No results for <code>{{ query }}</code>.</p>
+{% endif %}

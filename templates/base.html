@@ -3,19 +3,37 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="htmx-config" content='{"historyCacheSize": 10, "historyRestoreAsHxRequest": false, "scrollBehavior": "instant"}'>
     <title>{% block title %}x4explorer{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/pico.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/custom.css') }}">
-    <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
+    <link rel="stylesheet" href="/static/css/pico.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 <body hx-boost="true">
     <header class="container">
         <nav>
             <ul>
-                <li><strong>x4explorer</strong></li>
+                <li><a href="/"><strong>x4explorer</strong></a></li>
+            </ul>
+            <ul>
+                <li><a href="/search" {% if current == 'search' %}aria-current="page"{% endif %}>Search</a></li>
+                <li><a href="/wares" {% if current == 'wares' %}aria-current="page"{% endif %}>Wares</a></li>
+                <li><a href="/macros" {% if current == 'macros' %}aria-current="page"{% endif %}>Macros</a></li>
+                <li><a href="/components" {% if current == 'components' %}aria-current="page"{% endif %}>Components</a></li>
+                <li>
+                    <details class="dropdown">
+                        <summary {% if current == 'scripts' %}aria-current="page"{% endif %}>Scripts</summary>
+                        <ul dir="rtl">
+                            <li><a href="/scripts/datatypes">Datatypes</a></li>
+                            <li><a href="/scripts/keywords">Keywords</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="/conflicts" {% if current == 'conflicts' %}aria-current="page"{% endif %}>Conflicts</a></li>
             </ul>
         </nav>
     </header>
+
+    <div id="error-display" class="container" role="alert"></div>
 
     <main class="container">
         {% block content %}{% endblock %}
@@ -24,8 +42,21 @@
     <footer class="container">
         <small>
             x4explorer &mdash; powered by
-            <a href="https://github.com/meethune/x4cat">x4cat</a>
+            <a href="https://github.com/meethune/x4cat" hx-boost="false">x4cat</a>
         </small>
     </footer>
+
+    <script src="/static/js/htmx.min.js"></script>
+    <script>
+    document.body.addEventListener("htmx:responseError", function(e) {
+        var d = document.getElementById("error-display");
+        d.textContent = "Error " + e.detail.xhr.status + ": Request failed.";
+        setTimeout(function() { d.textContent = ""; }, 5000);
+    });
+    document.body.addEventListener("htmx:sendError", function() {
+        document.getElementById("error-display").textContent =
+            "Cannot reach server.";
+    });
+    </script>
 </body>
 </html>

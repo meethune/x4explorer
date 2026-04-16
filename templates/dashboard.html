@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}x4explorer{% endblock %}
+
+{% block content %}
+<hgroup>
+    <h1>X4: Foundations Index</h1>
+    <p><code>{{ game_dir }}</code></p>
+</hgroup>
+
+<form action="/search" method="get">
+    <input type="search"
+           name="q"
+           placeholder="ware, macro, or component ID..."
+           autocomplete="off"
+           autofocus>
+</form>
+
+<table class="counts-table">
+    <thead>
+        <tr>
+            <th>Table</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td><a href="/wares">Wares</a></td><td>{{ counts.wares | default(0) }}</td></tr>
+        <tr><td><a href="/macros">Macros</a></td><td>{{ counts.macros | default(0) }}</td></tr>
+        <tr><td><a href="/components">Components</a></td><td>{{ counts.components | default(0) }}</td></tr>
+        <tr><td>Game files</td><td>{{ counts.game_files | default(0) }}</td></tr>
+    </tbody>
+</table>
+{% endblock %}
