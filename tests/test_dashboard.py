@@ -19,8 +19,8 @@ class TestDashboard:
 
     def test_contains_table_counts(self, client: TestClient) -> None:
         response = client.get("/")
-        assert "3" in response.text  # wares count
-        assert "2" in response.text  # macros count
+        assert "15" in response.text  # wares count
+        assert "8" in response.text  # macros count
 
     def test_contains_nav_links(self, client: TestClient) -> None:
         response = client.get("/")

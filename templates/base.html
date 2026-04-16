@@ -48,6 +48,52 @@
 
     <script src="/static/js/htmx.min.js"></script>
     <script>
+    // Stateful nav links: persist last query string per list page
+    // in sessionStorage so nav links restore filter state even
+    // after navigating to detail pages and back.
+    (function() {
+        var PATHS = ["/wares", "/macros", "/components", "/search"];
+        var KEY = "x4e_nav_";
+
+        function saveState(url) {
+            var parsed = new URL(url, location.origin);
+            var path = parsed.pathname.replace(/\/$/, "") || "/";
+            if (PATHS.indexOf(path) === -1) return;
+            if (parsed.search) {
+                sessionStorage.setItem(KEY + path, parsed.search);
+            }
+        }
+
+        function applyNavLinks() {
+            for (var i = 0; i < PATHS.length; i++) {
+                var path = PATHS[i];
+                var qs = sessionStorage.getItem(KEY + path);
+                if (!qs) continue;
+                var links = document.querySelectorAll('nav a[href^="' + path + '"]');
+                for (var j = 0; j < links.length; j++) {
+                    var linkPath = new URL(links[j].href, location.origin).pathname;
+                    if (linkPath === path) {
+                        links[j].href = path + qs;
+                    }
+                }
+            }
+        }
+
+        // Save current URL state and apply stored state to nav links
+        saveState(location.href);
+        applyNavLinks();
+
+        // Save state on every URL push from htmx interactions
+        document.body.addEventListener("htmx:pushedIntoHistory", function(e) {
+            saveState(e.detail.path);
+            applyNavLinks();
+        });
+        document.body.addEventListener("htmx:replacedInHistory", function(e) {
+            saveState(e.detail.path);
+            applyNavLinks();
+        });
+    })();
+
     document.body.addEventListener("htmx:responseError", function(e) {
         var d = document.getElementById("error-display");
         d.textContent = "Error " + e.detail.xhr.status + ": Request failed.";

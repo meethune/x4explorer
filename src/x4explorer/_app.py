@@ -11,7 +11,9 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 from x4explorer._db import close_db, init_db
+from x4explorer._routes.components import component_detail, component_list
 from x4explorer._routes.dashboard import dashboard, search_page
+from x4explorer._routes.macros import macro_detail, macro_list
 from x4explorer._routes.wares import ware_detail, ware_list
 
 if TYPE_CHECKING:
@@ -39,6 +41,10 @@ def create_app(db_path: Path) -> Starlette:
         Route("/search", search_page, name="search"),
         Route("/wares", ware_list, name="wares"),
         Route("/wares/{ware_id:path}", ware_detail, name="ware_detail"),
+        Route("/macros", macro_list, name="macros"),
+        Route("/macros/{name:path}", macro_detail, name="macro_detail"),
+        Route("/components", component_list, name="components"),
+        Route("/components/{name:path}", component_detail, name="component_detail"),
         Mount("/static", app=StaticFiles(directory=str(_STATIC_DIR)), name="static"),
     ]
 

@@ -196,3 +196,161 @@ def get_ware_filter_options(conn: sqlite3.Connection) -> dict[str, list[str]]:
     tags = sorted(tag_set)
 
     return {"groups": groups, "transports": transports, "tags": tags}
+
+
+# --- Macros ---
+
+_MACRO_SORT_COLUMNS = frozenset({"name", "value"})
+
+
+def list_macros(
+    conn: sqlite3.Connection,
+    *,
+    macro_class: str | None = None,
+    query: str | None = None,
+    sort: str = "name",
+    direction: str = "asc",
+    page: int = 1,
+    per_page: int = 10,
+) -> tuple[list[sqlite3.Row], Page]:
+    """List macros with class and component_ref from properties, paginated."""
+    clauses: list[str] = []
+    params: list[object] = []
+
+    if macro_class:
+        clauses.append("mp_class.property_val = ?")
+        params.append(macro_class)
+    if query:
+        escaped = _escape_like(query)
+        clauses.append("m.name LIKE ? ESCAPE '\\'")
+        params.append(f"%{escaped}%")
+
+    where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+
+    count_sql = (
+        "SELECT COUNT(*) FROM macros m "
+        "LEFT JOIN macro_properties mp_class "
+        "ON m.name = mp_class.macro_name AND mp_class.property_key = 'class'"
+        f"{where}"
+    )
+    total = conn.execute(count_sql, params).fetchone()[0]
+
+    if sort not in _MACRO_SORT_COLUMNS:
+        sort = "name"
+    sort_col = f"m.{sort}"
+    order_dir = "DESC" if direction.upper() == "DESC" else "ASC"
+
+    page_info = Page(number=max(1, page), per_page=per_page, total_rows=total)
+    rows = conn.execute(
+        "SELECT m.name, m.value, "
+        "mp_class.property_val AS class, "
+        "mp_comp.property_val AS component_ref "
+        "FROM macros m "
+        "LEFT JOIN macro_properties mp_class "
+        "ON m.name = mp_class.macro_name AND mp_class.property_key = 'class' "
+        "LEFT JOIN macro_properties mp_comp "
+        "ON m.name = mp_comp.macro_name AND mp_comp.property_key = 'component_ref'"
+        f"{where} ORDER BY {sort_col} {order_dir} LIMIT ? OFFSET ?",
+        (*params, per_page, page_info.offset),
+    ).fetchall()
+    return rows, page_info
+
+
+def get_macro(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
+    """Return a single macro by name."""
+    result: sqlite3.Row | None = conn.execute(
+        "SELECT * FROM macros WHERE name = ?", (name,)
+    ).fetchone()
+    return result
+
+
+def get_macro_properties(conn: sqlite3.Connection, macro_name: str) -> list[sqlite3.Row]:
+    """Return all properties for a macro, sorted by key."""
+    return conn.execute(
+        "SELECT property_key, property_val FROM macro_properties "
+        "WHERE macro_name = ? ORDER BY property_key",
+        (macro_name,),
+    ).fetchall()
+
+
+def get_macro_ware(conn: sqlite3.Connection, macro_name: str) -> str | None:
+    """Find a ware ID that matches this macro name."""
+    # Ware IDs often match a prefix of the macro name (minus _macro suffix)
+    prefix = macro_name.removesuffix("_macro")
+    row = conn.execute(
+        "SELECT ware_id FROM wares WHERE ware_id = ? OR ware_id = ?",
+        (prefix, macro_name),
+    ).fetchone()
+    return row[0] if row else None
+
+
+def get_macro_filter_options(conn: sqlite3.Connection) -> dict[str, list[str]]:
+    """Return distinct macro class values for filter dropdown."""
+    classes = [
+        r[0]
+        for r in conn.execute(
+            "SELECT DISTINCT property_val FROM macro_properties "
+            "WHERE property_key = 'class' AND property_val != '' "
+            "ORDER BY property_val"
+        ).fetchall()
+    ]
+    return {"classes": classes}
+
+
+# --- Components ---
+
+_COMPONENT_SORT_COLUMNS = frozenset({"name", "value"})
+
+
+def list_components(
+    conn: sqlite3.Connection,
+    *,
+    query: str | None = None,
+    sort: str = "name",
+    direction: str = "asc",
+    page: int = 1,
+    per_page: int = 10,
+) -> tuple[list[sqlite3.Row], Page]:
+    """List components, paginated."""
+    clauses: list[str] = []
+    params: list[object] = []
+
+    if query:
+        escaped = _escape_like(query)
+        clauses.append("name LIKE ? ESCAPE '\\'")
+        params.append(f"%{escaped}%")
+
+    where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+    total = conn.execute(
+        f"SELECT COUNT(*) FROM components{where}",
+        params,  # noqa: S608
+    ).fetchone()[0]
+
+    if sort not in _COMPONENT_SORT_COLUMNS:
+        sort = "name"
+    order_dir = "DESC" if direction.upper() == "DESC" else "ASC"
+
+    page_info = Page(number=max(1, page), per_page=per_page, total_rows=total)
+    rows = conn.execute(
+        f"SELECT * FROM components{where} ORDER BY {sort} {order_dir} "  # noqa: S608
+        "LIMIT ? OFFSET ?",
+        (*params, per_page, page_info.offset),
+    ).fetchall()
+    return rows, page_info
+
+
+def get_component(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
+    """Return a single component by name."""
+    result: sqlite3.Row | None = conn.execute(
+        "SELECT * FROM components WHERE name = ?", (name,)
+    ).fetchone()
+    return result
+
+
+def get_component_macros(conn: sqlite3.Connection, component_name: str) -> list[sqlite3.Row]:
+    """Return macros that reference this component via component_ref."""
+    return conn.execute(
+        "SELECT macro_name FROM macro_properties "
+        "WHERE property_key = 'component_ref' AND property_val = ?",
+        (component_name,),
+    ).fetchall()

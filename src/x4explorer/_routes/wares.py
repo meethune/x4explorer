@@ -30,17 +30,11 @@ async def ware_list(request: Request) -> Response:
     page_num, per_page = parse_page_params(
         request.query_params.get("page"),
         request.query_params.get("per_page"),
-        per_page_cookie=request.cookies.get("per_page"),
     )
 
-    # If param is in the query string, use it (even if empty = "All").
-    # Only fall back to cookie when the param is absent entirely.
-    params = request.query_params
-    group = (params["group"] if "group" in params else request.cookies.get("wares_group")) or None
-    transport = (
-        params["transport"] if "transport" in params else request.cookies.get("wares_transport")
-    ) or None
-    tag = (params["tag"] if "tag" in params else request.cookies.get("wares_tag")) or None
+    group = request.query_params.get("group", "").strip() or None
+    transport = request.query_params.get("transport", "").strip() or None
+    tag = request.query_params.get("tag", "").strip() or None
     query = request.query_params.get("q", "").strip() or None
     sort = request.query_params.get("sort", "ware_id")
     direction = request.query_params.get("dir", "asc")
@@ -77,10 +71,6 @@ async def ware_list(request: Request) -> Response:
     else:
         response = templates.TemplateResponse(request, "wares/list.html", context)
     response.headers["Vary"] = "HX-Request"
-    response.set_cookie("per_page", str(per_page), max_age=31536000, httponly=True)
-    response.set_cookie("wares_group", group or "", max_age=31536000, httponly=True)
-    response.set_cookie("wares_transport", transport or "", max_age=31536000, httponly=True)
-    response.set_cookie("wares_tag", tag or "", max_age=31536000, httponly=True)
     return response
 
 

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ macro.name }} — x4explorer{% endblock %}
+
+{% block content %}
+<h1><code>{{ macro.name }}</code></h1>
+
+<dl class="detail">
+    <dt>Path</dt>
+    <dd><code>{{ macro.value }}</code></dd>
+    {% if component_ref %}
+    <dt>Component</dt>
+    <dd><code><a href="/components/{{ component_ref }}">{{ component_ref }}</a></code></dd>
+    {% endif %}
+    {% if ware_id %}
+    <dt>Ware</dt>
+    <dd><code><a href="/wares/{{ ware_id }}">{{ ware_id }}</a></code></dd>
+    {% endif %}
+</dl>
+
+{% if properties %}
+<h2>Properties</h2>
+<div style="overflow-x: auto">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in properties %}
+        <tr>
+            <td><code>{{ p.property_key }}</code></td>
+            <td>{{ p.property_val }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<p><a href="#" onclick="history.back(); return false;" hx-boost="false">&larr; Back</a></p>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Components — x4explorer{% endblock %}
+
+{% block content %}
+<h1>Components</h1>
+
+<div class="search-controls">
+    <div class="search-row">
+        <input type="search" name="q" value="{{ query }}" placeholder="Filter by name..."
+               hx-get="/components"
+               hx-trigger="input changed delay:300ms, keyup[key=='Enter']"
+               hx-target="#components-data"
+               hx-include="[name='sort'],[name='dir'],[name='per_page']"
+               hx-vals='{"page": "1"}'
+               hx-push-url="true"
+               hx-sync="this:replace"
+               autocomplete="off">
+        <select name="per_page"
+                hx-get="/components"
+                hx-target="#components-data"
+                hx-include="[name='q'],[name='sort'],[name='dir']"
+                hx-vals='{"page": "1"}'
+                hx-push-url="true">
+            {% for size in [10, 25, 50, 100] %}
+            <option value="{{ size }}" {{ 'selected' if page.per_page == size }}>{{ size }}</option>
+            {% endfor %}
+        </select>
+        <a href="/components" class="btn-reset" role="button"
+           onclick="sessionStorage.removeItem('x4e_nav_/components')">Reset</a>
+    </div>
+</div>
+
+<div id="components-data" hx-sync="this:replace">
+    {% include "components/_table.html" %}
+</div>
+{% endblock %}

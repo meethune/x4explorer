@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ component.name }} — x4explorer{% endblock %}
+
+{% block content %}
+<h1><code>{{ component.name }}</code></h1>
+
+<dl class="detail">
+    <dt>Path</dt>
+    <dd><code>{{ component.value }}</code></dd>
+</dl>
+
+{% if referencing_macros %}
+<h2>Referenced by</h2>
+<ul>
+    {% for m in referencing_macros %}
+    <li><code><a href="/macros/{{ m.macro_name }}">{{ m.macro_name }}</a></code></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="#" onclick="history.back(); return false;" hx-boost="false">&larr; Back</a></p>
+{% endblock %}
