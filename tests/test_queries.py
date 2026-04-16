@@ -96,6 +96,14 @@ class TestSearch:
         assert results == []
         assert page.total_rows == 0
 
+    def test_single_char_query_returns_empty(self, test_db: Path) -> None:
+        conn = sqlite3.connect(test_db)
+        conn.row_factory = sqlite3.Row
+        results, page = search(conn, "s")
+        conn.close()
+        assert results == []
+        assert page.total_rows == 0
+
     def test_like_wildcards_escaped(self, test_db: Path) -> None:
         conn = sqlite3.connect(test_db)
         conn.row_factory = sqlite3.Row
@@ -107,7 +115,7 @@ class TestSearch:
         conn = sqlite3.connect(test_db)
         conn.row_factory = sqlite3.Row
         # "s" matches multiple fixtures across all tables
-        results, page = search(conn, "s", page=1, per_page=2)
+        results, page = search(conn, "sh", page=1, per_page=2)
         conn.close()
         assert len(results) == 2
         assert page.total_rows > 2
@@ -116,8 +124,8 @@ class TestSearch:
     def test_pagination_page_2(self, test_db: Path) -> None:
         conn = sqlite3.connect(test_db)
         conn.row_factory = sqlite3.Row
-        results_p1, _ = search(conn, "s", page=1, per_page=2)
-        results_p2, page = search(conn, "s", page=2, per_page=2)
+        results_p1, _ = search(conn, "sh", page=1, per_page=2)
+        results_p2, page = search(conn, "sh", page=2, per_page=2)
         conn.close()
         # Pages should have different results
         ids_p1 = {r["id"] for r in results_p1}

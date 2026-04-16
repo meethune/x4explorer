@@ -23,6 +23,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_serve.add_argument("--host", default="127.0.0.1", help="Bind address (default: 127.0.0.1)")
     p_serve.add_argument("--port", type=int, default=8000, help="Port (default: 8000)")
+    p_serve.add_argument("--debug", action="store_true", help="Enable debug mode")
 
     args = parser.parse_args(argv)
 
@@ -51,6 +52,6 @@ def _cmd_serve(args: argparse.Namespace) -> int:
 
     from x4explorer._app import create_app
 
-    app = create_app(db_path)
+    app = create_app(db_path, debug=args.debug)
     uvicorn.run(app, host=args.host, port=args.port)
     return 0

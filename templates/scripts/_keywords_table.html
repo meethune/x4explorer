@@ -1,7 +1,7 @@
 {% macro sort_link(col, label) %}
 {% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
 {% set arrow = '▲' if dir == 'asc' else '▼' %}
-{% set base = "/scripts/keywords?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&script=" ~ script ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+{% set base = "/scripts/keywords?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&script=" ~ (script | urlencode) ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
 <a href="{{ base }}"
    hx-get="{{ base }}"
    hx-target="#keywords-data"
@@ -36,6 +36,6 @@
 </table>
 </div>
 
-{% set base_url = "/scripts/keywords?sort=" ~ sort ~ "&dir=" ~ dir ~ "&script=" ~ script ~ "&q=" ~ (query | urlencode) %}
+{% set base_url = "/scripts/keywords?sort=" ~ sort ~ "&dir=" ~ dir ~ "&script=" ~ (script | urlencode) ~ "&q=" ~ (query | urlencode) %}
 {% set htmx_target = "#keywords-data" %}
 {% include "_pagination.html" %}

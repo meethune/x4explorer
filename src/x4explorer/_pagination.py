@@ -16,6 +16,10 @@ class Page:
     per_page: int
     total_rows: int
 
+    def __post_init__(self) -> None:
+        max_page = max(1, (self.total_rows + self.per_page - 1) // self.per_page)
+        object.__setattr__(self, "number", min(self.number, max_page))
+
     @property
     def total_pages(self) -> int:
         return max(1, (self.total_rows + self.per_page - 1) // self.per_page)
@@ -55,3 +59,21 @@ def parse_page_params(
         per_page = _DEFAULT_PER_PAGE
 
     return page, per_page
+
+
+def parse_sort_params(
+    sort_raw: str | None,
+    dir_raw: str | None,
+    *,
+    allowed: frozenset[str],
+    default: str,
+) -> tuple[str, str]:
+    """Validate and normalize sort column and direction.
+
+    Returns (sort, direction) with safe defaults.
+    """
+    sort = sort_raw if sort_raw in allowed else default
+    direction = dir_raw.lower() if dir_raw else "asc"
+    if direction not in ("asc", "desc"):
+        direction = "asc"
+    return sort, direction

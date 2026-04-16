@@ -1,7 +1,7 @@
 {% macro sort_link(col, label) %}
 {% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
 {% set arrow = '▲' if dir == 'asc' else '▼' %}
-{% set base = "/macros?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&class=" ~ macro_class ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+{% set base = "/macros?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&class=" ~ (macro_class | urlencode) ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
 <a href="{{ base }}"
    hx-get="{{ base }}"
    hx-target="#macros-data"
@@ -36,6 +36,6 @@
 </table>
 </div>
 
-{% set base_url = "/macros?sort=" ~ sort ~ "&dir=" ~ dir ~ "&class=" ~ macro_class ~ "&q=" ~ (query | urlencode) %}
+{% set base_url = "/macros?sort=" ~ sort ~ "&dir=" ~ dir ~ "&class=" ~ (macro_class | urlencode) ~ "&q=" ~ (query | urlencode) %}
 {% set htmx_target = "#macros-data" %}
 {% include "_pagination.html" %}

@@ -6,6 +6,7 @@ import contextlib
 from typing import TYPE_CHECKING
 
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -23,12 +24,42 @@ from x4explorer._routes.scripts import (
 from x4explorer._routes.wares import ware_detail, ware_list
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, MutableMapping
     from pathlib import Path
+    from typing import Any
+
+    from starlette.types import ASGIApp, Receive, Scope, Send
 
 _BASE_DIR = __import__("pathlib").Path(__file__).resolve().parent.parent.parent
 _TEMPLATE_DIR = _BASE_DIR / "templates"
 _STATIC_DIR = _BASE_DIR / "static"
+
+
+class _SecurityHeadersMiddleware:
+    """Add standard security response headers."""
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        async def send_with_headers(message: MutableMapping[str, Any]) -> None:
+            if isinstance(message, dict) and message.get("type") == "http.response.start":
+                headers = list(message.get("headers", []))
+                headers.extend(
+                    [
+                        (b"x-content-type-options", b"nosniff"),
+                        (b"x-frame-options", b"DENY"),
+                        (b"referrer-policy", b"strict-origin-when-cross-origin"),
+                    ]
+                )
+                message["headers"] = headers
+            await send(message)
+
+        await self.app(scope, receive, send_with_headers)
 
 
 @contextlib.asynccontextmanager
@@ -38,7 +69,7 @@ async def _lifespan(app: Starlette) -> AsyncIterator[None]:
     close_db()
 
 
-def create_app(db_path: Path) -> Starlette:
+def create_app(db_path: Path, *, debug: bool = False) -> Starlette:
     """Create the Starlette application."""
     templates = Jinja2Templates(directory=str(_TEMPLATE_DIR))
 
@@ -59,9 +90,10 @@ def create_app(db_path: Path) -> Starlette:
     ]
 
     app = Starlette(
-        debug=True,
+        debug=debug,
         routes=routes,
         lifespan=_lifespan,
+        middleware=[Middleware(_SecurityHeadersMiddleware)],
     )
     app.state.db_path = db_path
     app.state.templates = templates

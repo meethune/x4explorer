@@ -1,7 +1,7 @@
 {% macro sort_link(col, label) %}
 {% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
 {% set arrow = '▲' if dir == 'asc' else '▼' %}
-{% set base = "/wares?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&group=" ~ group ~ "&transport=" ~ transport ~ "&tag=" ~ tag ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+{% set base = "/wares?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&group=" ~ (group | urlencode) ~ "&transport=" ~ (transport | urlencode) ~ "&tag=" ~ (tag | urlencode) ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
 <a href="{{ base }}"
    hx-get="{{ base }}"
    hx-target="#wares-data"
@@ -44,6 +44,6 @@
 </table>
 </div>
 
-{% set base_url = "/wares?sort=" ~ sort ~ "&dir=" ~ dir ~ "&group=" ~ group ~ "&transport=" ~ transport ~ "&tag=" ~ tag ~ "&q=" ~ (query | urlencode) %}
+{% set base_url = "/wares?sort=" ~ sort ~ "&dir=" ~ dir ~ "&group=" ~ (group | urlencode) ~ "&transport=" ~ (transport | urlencode) ~ "&tag=" ~ (tag | urlencode) ~ "&q=" ~ (query | urlencode) %}
 {% set htmx_target = "#wares-data" %}
 {% include "_pagination.html" %}
