@@ -14,13 +14,9 @@ from starlette.templating import Jinja2Templates
 from x4explorer._db import close_db, init_db
 from x4explorer._routes.components import component_detail, component_list
 from x4explorer._routes.dashboard import dashboard, search_page
+from x4explorer._routes.datatypes import datatype_detail, datatype_list
+from x4explorer._routes.keywords import keyword_detail, keyword_list
 from x4explorer._routes.macros import macro_detail, macro_list
-from x4explorer._routes.scripts import (
-    datatype_detail,
-    datatype_list,
-    keyword_detail,
-    keyword_list,
-)
 from x4explorer._routes.wares import ware_detail, ware_list
 
 if TYPE_CHECKING:
