@@ -84,6 +84,10 @@ class TestWareDetail:
         response = client.get("/wares/energycells")
         assert response.status_code == 200
 
+    def test_contains_resolved_name(self, client: TestClient) -> None:
+        response = client.get("/wares/energycells")
+        assert "Energy Cells" in response.text
+
     def test_contains_price_data(self, client: TestClient) -> None:
         response = client.get("/wares/energycells")
         assert "16" in response.text  # price_avg

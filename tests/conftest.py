@@ -23,6 +23,7 @@ def _create_test_db(path: Path) -> None:
         CREATE TABLE components (name TEXT PRIMARY KEY, value TEXT NOT NULL);
         CREATE TABLE wares (
             ware_id TEXT PRIMARY KEY, name_ref TEXT DEFAULT '',
+            name_resolved TEXT DEFAULT '',
             ware_group TEXT DEFAULT '', transport TEXT DEFAULT '',
             volume INTEGER DEFAULT 0, tags TEXT DEFAULT '',
             price_min INTEGER DEFAULT 0, price_avg INTEGER DEFAULT 0,
@@ -48,50 +49,50 @@ def _create_test_db(path: Path) -> None:
 
         -- Wares (enough for pagination: 15 total)
         INSERT INTO wares VALUES
-            ('energycells', '{20201,301}', 'energy', 'container',
-             6, 'container economy', 10, 16, 22);
+            ('energycells', '{20201,301}', 'Energy Cells', 'energy',
+             'container', 6, 'container economy', 10, 16, 22);
         INSERT INTO wares VALUES
-            ('ship_arg_s_fighter_01_a', '{20101,200}', 'ships_argon', 'ship',
-             1, 'ship', 100000, 130000, 160000);
+            ('ship_arg_s_fighter_01_a', '{20101,200}', 'Argon Fighter',
+             'ships_argon', 'ship', 1, 'ship', 100000, 130000, 160000);
         INSERT INTO wares VALUES
-            ('advancedcomposites', '{20201,401}', 'hightech', 'container',
-             32, 'container economy', 432, 540, 648);
+            ('advancedcomposites', '{20201,401}', 'Advanced Composites',
+             'hightech', 'container', 32, 'container economy', 432, 540, 648);
         INSERT INTO wares VALUES
-            ('antimattercells', '{20201,201}', 'refined', 'container',
-             18, 'container economy', 121, 202, 282);
+            ('antimattercells', '{20201,201}', 'Antimatter Cells',
+             'refined', 'container', 18, 'container economy', 121, 202, 282);
         INSERT INTO wares VALUES
-            ('claytronics', '{20201,501}', 'hightech', 'container',
-             60, 'container economy', 1276, 1594, 1912);
+            ('claytronics', '{20201,501}', 'Claytronics',
+             'hightech', 'container', 60, 'container economy', 1276, 1594, 1912);
         INSERT INTO wares VALUES
-            ('graphene', '{20201,601}', 'refined', 'container',
-             20, 'container economy', 66, 110, 154);
+            ('graphene', '{20201,601}', 'Graphene',
+             'refined', 'container', 20, 'container economy', 66, 110, 154);
         INSERT INTO wares VALUES
-            ('hullparts', '{20201,701}', 'shiptech', 'container',
-             24, 'container economy', 138, 230, 322);
+            ('hullparts', '{20201,701}', 'Hull Parts',
+             'shiptech', 'container', 24, 'container economy', 138, 230, 322);
         INSERT INTO wares VALUES
-            ('microchips', '{20201,801}', 'shiptech', 'container',
-             22, 'container economy', 28, 46, 64);
+            ('microchips', '{20201,801}', 'Microchips',
+             'shiptech', 'container', 22, 'container economy', 28, 46, 64);
         INSERT INTO wares VALUES
-            ('ore', '{20201,901}', 'minerals', 'solid',
-             10, 'container economy', 30, 50, 70);
+            ('ore', '{20201,901}', 'Ore',
+             'minerals', 'solid', 10, 'container economy', 30, 50, 70);
         INSERT INTO wares VALUES
-            ('silicon', '{20201,1001}', 'minerals', 'solid',
-             10, 'container economy', 67, 134, 201);
+            ('silicon', '{20201,1001}', 'Silicon',
+             'minerals', 'solid', 10, 'container economy', 67, 134, 201);
         INSERT INTO wares VALUES
-            ('water', '{20201,1101}', 'ice', 'liquid',
-             6, 'container economy', 18, 32, 46);
+            ('water', '{20201,1101}', 'Water',
+             'ice', 'liquid', 6, 'container economy', 18, 32, 46);
         INSERT INTO wares VALUES
-            ('wheat', '{20201,1201}', 'agricultural', 'container',
-             6, 'container economy', 6, 12, 18);
+            ('wheat', '{20201,1201}', 'Wheat',
+             'agricultural', 'container', 6, 'container economy', 6, 12, 18);
         INSERT INTO wares VALUES
-            ('engine_arg_s_allround_01_mk1', '{20107,100}', 'engines',
-             'equipment', 1, 'engine equipment', 1000, 1500, 2000);
+            ('engine_arg_s_allround_01_mk1', '{20107,100}', 'Allround Engine Mk1',
+             'engines', 'equipment', 1, 'engine equipment', 1000, 1500, 2000);
         INSERT INTO wares VALUES
-            ('shield_arg_s_standard_01_mk1', '{20108,100}', 'shields',
-             'equipment', 1, 'shield equipment', 800, 1200, 1600);
+            ('shield_arg_s_standard_01_mk1', '{20108,100}', 'Standard Shield Mk1',
+             'shields', 'equipment', 1, 'shield equipment', 800, 1200, 1600);
         INSERT INTO wares VALUES
-            ('missile_guided_mk1', '{20110,100}', 'missiles',
-             'equipment', 1, 'missile', 50, 75, 100);
+            ('missile_guided_mk1', '{20110,100}', 'Guided Missile Mk1',
+             'missiles', 'equipment', 1, 'missile', 50, 75, 100);
 
         -- Ware owners
         INSERT INTO ware_owners VALUES ('energycells', 'argon');

@@ -60,20 +60,26 @@ def search(
 
     if type_filter is None or type_filter == "ware":
         rows = conn.execute(
-            "SELECT ware_id, name_ref, ware_group, transport "
+            "SELECT ware_id, name_ref, name_resolved, ware_group, transport "
             "FROM wares "
-            "WHERE ware_id LIKE ? ESCAPE '\\' OR name_ref LIKE ? ESCAPE '\\'",
-            (pattern, pattern),
+            "WHERE ware_id LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR name_ref LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR name_resolved LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR ware_group LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR tags LIKE ? ESCAPE '\\' COLLATE NOCASE",
+            (pattern, pattern, pattern, pattern, pattern),
         ).fetchall()
         for row in rows:
             detail = row["ware_group"]
+            if row["name_resolved"]:
+                detail = f"{row['name_resolved']} [{detail}]" if detail else row["name_resolved"]
             if row["transport"]:
-                detail += f" [{row['transport']}]"
+                detail += f" [{row['transport']}]" if not row["name_resolved"] else ""
             results.append({"type": "ware", "id": row["ware_id"], "detail": detail})
 
     if type_filter is None or type_filter == "macro":
         rows = conn.execute(
-            "SELECT name, value FROM macros WHERE name LIKE ? ESCAPE '\\'",
+            "SELECT name, value FROM macros WHERE name LIKE ? ESCAPE '\\' COLLATE NOCASE",
             (pattern,),
         ).fetchall()
         for row in rows:
@@ -81,7 +87,7 @@ def search(
 
     if type_filter is None or type_filter == "component":
         rows = conn.execute(
-            "SELECT name, value FROM components WHERE name LIKE ? ESCAPE '\\'",
+            "SELECT name, value FROM components WHERE name LIKE ? ESCAPE '\\' COLLATE NOCASE",
             (pattern,),
         ).fetchall()
         for row in rows:
@@ -89,7 +95,8 @@ def search(
 
     if type_filter is None or type_filter == "datatype":
         rows = conn.execute(
-            "SELECT name, base_type FROM script_datatypes WHERE name LIKE ? ESCAPE '\\'",
+            "SELECT name, base_type FROM script_datatypes "
+            "WHERE name LIKE ? ESCAPE '\\' COLLATE NOCASE",
             (pattern,),
         ).fetchall()
         for row in rows:
@@ -99,7 +106,8 @@ def search(
     if type_filter is None or type_filter == "keyword":
         rows = conn.execute(
             "SELECT name, description, script FROM script_keywords "
-            "WHERE name LIKE ? ESCAPE '\\' OR description LIKE ? ESCAPE '\\'",
+            "WHERE name LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR description LIKE ? ESCAPE '\\' COLLATE NOCASE",
             (pattern, pattern),
         ).fetchall()
         for row in rows:
@@ -118,6 +126,7 @@ _WARE_SORT_COLUMNS = frozenset(
     {
         "ware_id",
         "name_ref",
+        "name_resolved",
         "ware_group",
         "transport",
         "volume",
@@ -156,8 +165,12 @@ def list_wares(
         params.append(f"%{escaped}%")
     if query:
         escaped = _escape_like(query)
-        clauses.append("(ware_id LIKE ? ESCAPE '\\' OR name_ref LIKE ? ESCAPE '\\')")
-        params.extend([f"%{escaped}%", f"%{escaped}%"])
+        clauses.append(
+            "(ware_id LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR name_ref LIKE ? ESCAPE '\\' COLLATE NOCASE "
+            "OR name_resolved LIKE ? ESCAPE '\\' COLLATE NOCASE)"
+        )
+        params.extend([f"%{escaped}%", f"%{escaped}%", f"%{escaped}%"])
 
     where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
     total = conn.execute(f"SELECT COUNT(*) FROM wares{where}", params).fetchone()[0]  # noqa: S608
