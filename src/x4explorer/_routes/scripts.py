@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from x4explorer._db import get_db
-from x4explorer._pagination import parse_page_params
+from x4explorer._pagination import parse_page_params, parse_sort_params
 from x4explorer._routes.dashboard import _is_htmx_fragment
 
 if TYPE_CHECKING:
@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from starlette.templating import Jinja2Templates
 
 from x4explorer._queries import (
+    _DATATYPE_SORT_COLUMNS,
+    _KEYWORD_SORT_COLUMNS,
     get_all_datatype_names,
     get_datatype,
     get_datatype_filter_options,
@@ -39,8 +41,12 @@ async def datatype_list(request: Request) -> Response:
 
     base_type = request.query_params.get("base_type", "").strip() or None
     query = request.query_params.get("q", "").strip() or None
-    sort = request.query_params.get("sort", "name")
-    direction = request.query_params.get("dir", "asc")
+    sort, direction = parse_sort_params(
+        request.query_params.get("sort"),
+        request.query_params.get("dir"),
+        allowed=_DATATYPE_SORT_COLUMNS,
+        default="name",
+    )
 
     datatypes, page_info = list_datatypes(
         conn,
@@ -127,8 +133,12 @@ async def keyword_list(request: Request) -> Response:
 
     script = request.query_params.get("script", "").strip() or None
     query = request.query_params.get("q", "").strip() or None
-    sort = request.query_params.get("sort", "name")
-    direction = request.query_params.get("dir", "asc")
+    sort, direction = parse_sort_params(
+        request.query_params.get("sort"),
+        request.query_params.get("dir"),
+        allowed=_KEYWORD_SORT_COLUMNS,
+        default="name",
+    )
 
     keywords, page_info = list_keywords(
         conn,

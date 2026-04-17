@@ -1,7 +1,7 @@
 {% macro sort_link(col, label) %}
 {% set new_dir = 'desc' if sort == col and dir == 'asc' else 'asc' %}
 {% set arrow = '▲' if dir == 'asc' else '▼' %}
-{% set base = "/scripts/datatypes?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&base_type=" ~ base_type ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
+{% set base = "/scripts/datatypes?sort=" ~ col ~ "&dir=" ~ new_dir ~ "&base_type=" ~ (base_type | urlencode) ~ "&q=" ~ (query | urlencode) ~ "&per_page=" ~ page.per_page %}
 <a href="{{ base }}"
    hx-get="{{ base }}"
    hx-target="#datatypes-data"
@@ -36,6 +36,6 @@
 </table>
 </div>
 
-{% set base_url = "/scripts/datatypes?sort=" ~ sort ~ "&dir=" ~ dir ~ "&base_type=" ~ base_type ~ "&q=" ~ (query | urlencode) %}
+{% set base_url = "/scripts/datatypes?sort=" ~ sort ~ "&dir=" ~ dir ~ "&base_type=" ~ (base_type | urlencode) ~ "&q=" ~ (query | urlencode) %}
 {% set htmx_target = "#datatypes-data" %}
 {% include "_pagination.html" %}

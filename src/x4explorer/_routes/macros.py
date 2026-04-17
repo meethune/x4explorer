@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from x4explorer._db import get_db
-from x4explorer._pagination import parse_page_params
+from x4explorer._pagination import parse_page_params, parse_sort_params
 from x4explorer._routes.dashboard import _is_htmx_fragment
 
 if TYPE_CHECKING:
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from starlette.templating import Jinja2Templates
 
 from x4explorer._queries import (
+    _MACRO_SORT_COLUMNS,
     get_macro,
     get_macro_filter_options,
     get_macro_properties,
@@ -34,8 +35,12 @@ async def macro_list(request: Request) -> Response:
 
     macro_class = request.query_params.get("class", "").strip() or None
     query = request.query_params.get("q", "").strip() or None
-    sort = request.query_params.get("sort", "name")
-    direction = request.query_params.get("dir", "asc")
+    sort, direction = parse_sort_params(
+        request.query_params.get("sort"),
+        request.query_params.get("dir"),
+        allowed=_MACRO_SORT_COLUMNS,
+        default="name",
+    )
 
     macros, page_info = list_macros(
         conn,

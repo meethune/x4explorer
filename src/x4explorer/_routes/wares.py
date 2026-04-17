@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from x4explorer._db import get_db
-from x4explorer._pagination import parse_page_params
+from x4explorer._pagination import parse_page_params, parse_sort_params
 from x4explorer._routes.dashboard import _is_htmx_fragment
 
 if TYPE_CHECKING:
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from starlette.templating import Jinja2Templates
 
 from x4explorer._queries import (
+    _WARE_SORT_COLUMNS,
     get_ware,
     get_ware_filter_options,
     get_ware_macro,
@@ -36,8 +37,12 @@ async def ware_list(request: Request) -> Response:
     transport = request.query_params.get("transport", "").strip() or None
     tag = request.query_params.get("tag", "").strip() or None
     query = request.query_params.get("q", "").strip() or None
-    sort = request.query_params.get("sort", "ware_id")
-    direction = request.query_params.get("dir", "asc")
+    sort, direction = parse_sort_params(
+        request.query_params.get("sort"),
+        request.query_params.get("dir"),
+        allowed=_WARE_SORT_COLUMNS,
+        default="ware_id",
+    )
 
     wares, page_info = list_wares(
         conn,

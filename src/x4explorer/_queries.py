@@ -51,7 +51,7 @@ def search(
     Returns (results_page, page_info) where results_page is the
     current page slice and page_info has pagination metadata.
     """
-    if not query or not query.strip():
+    if not query or len(query.strip()) < 2:
         return [], Page(number=1, per_page=per_page, total_rows=0)
 
     escaped = _escape_like(query.strip())

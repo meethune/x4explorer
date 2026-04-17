@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from x4explorer._db import get_db
-from x4explorer._pagination import parse_page_params
+from x4explorer._pagination import parse_page_params, parse_sort_params
 from x4explorer._routes.dashboard import _is_htmx_fragment
 
 if TYPE_CHECKING:
@@ -13,7 +13,12 @@ if TYPE_CHECKING:
     from starlette.responses import Response
     from starlette.templating import Jinja2Templates
 
-from x4explorer._queries import get_component, get_component_macros, list_components
+from x4explorer._queries import (
+    _COMPONENT_SORT_COLUMNS,
+    get_component,
+    get_component_macros,
+    list_components,
+)
 
 
 async def component_list(request: Request) -> Response:
@@ -27,8 +32,12 @@ async def component_list(request: Request) -> Response:
     )
 
     query = request.query_params.get("q", "").strip() or None
-    sort = request.query_params.get("sort", "name")
-    direction = request.query_params.get("dir", "asc")
+    sort, direction = parse_sort_params(
+        request.query_params.get("sort"),
+        request.query_params.get("dir"),
+        allowed=_COMPONENT_SORT_COLUMNS,
+        default="name",
+    )
 
     components, page_info = list_components(
         conn,
