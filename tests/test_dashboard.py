@@ -63,6 +63,21 @@ class TestSearch:
         assert response.status_code == 200
         assert "ship_arg_s_fighter_01_a" in response.text
 
+    def test_search_by_resolved_name(self, client: TestClient) -> None:
+        response = client.get("/search?q=Energy Cells")
+        assert response.status_code == 200
+        assert "energycells" in response.text
+
+    def test_search_case_insensitive(self, client: TestClient) -> None:
+        response = client.get("/search?q=ENERGY")
+        assert response.status_code == 200
+        assert "energycells" in response.text
+
+    def test_search_by_tag(self, client: TestClient) -> None:
+        response = client.get("/search?q=economy&type=ware")
+        assert response.status_code == 200
+        assert "energycells" in response.text
+
     def test_search_type_all_returns_results(self, client: TestClient) -> None:
         response = client.get("/search?q=energy&type=all")
         assert response.status_code == 200

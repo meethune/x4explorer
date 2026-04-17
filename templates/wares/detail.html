@@ -6,8 +6,12 @@
 <h1><code>{{ ware.ware_id }}</code></h1>
 
 <dl class="detail">
+    {% if ware.name_resolved %}
+    <dt>Name</dt>
+    <dd>{{ ware.name_resolved }}</dd>
+    {% endif %}
     <dt>Name Ref</dt>
-    <dd>{{ ware.name_ref }}</dd>
+    <dd><code>{{ ware.name_ref }}</code></dd>
     <dt>Group</dt>
     <dd>{{ ware.ware_group }}</dd>
     <dt>Transport</dt>
